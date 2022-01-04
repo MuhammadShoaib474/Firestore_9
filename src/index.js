@@ -1,82 +1,46 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, addDoc, collection, getDoc, getDocs } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore,collection,addDoc} from "firebase/firestore";
+import { async } from "@firebase/util";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyDKTslFoMPcgTeEXnnu9sxxn9rChu6pFrw",
-    authDomain: "new-project-4b177.firebaseapp.com",
-    projectId: "new-project-4b177",
-    storageBucket: "new-project-4b177.appspot.com",
-    messagingSenderId: "1006741241233",
-    appId: "1:1006741241233:web:143dd7ce76ccadc42b6e30",
-    measurementId: "G-VRBDT4KEXE"
+  apiKey: "AIzaSyCR6nPtBXBwufOXb8MUMd0FULEjeSU-Wig",
+  authDomain: "calculator-d863e.firebaseapp.com",
+  projectId: "calculator-d863e",
+  storageBucket: "calculator-d863e.appspot.com",
+  messagingSenderId: "945573761639",
+  appId: "1:945573761639:web:33d7af386864fc8e89fac2",
+  measurementId: "G-BRSBCFVQFP"
 };
 
 // Initialize Firebase
-const addBtn = document.getElementById('submitBtn')
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 const db = getFirestore()
-let userRef = collection(db, 'user')
+const foodcollectionrefrence = collection(db, 'food')
 
+const form = document.getElementById('food_form')
 
-const submitDataToFirebase = async () => {
-    const name = document.getElementById('name').value
-    if (name) {
-        let obj = {
-            name
-        }
-        let student = await addDoc(userRef, obj)
-        console.log(student.id)
-        alert('User data added suucessfully')
-        document.getElementById('name').value = ''
+console.log(form)
 
-    } else {
-        alert('Please enter name')
+form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    let obj = {
+        name : form.name.value,
+        price: form.price.value,
+        desc: form.desc.value,
+        image:form.image.value,
     }
-}
-
-addBtn.addEventListener('click', submitDataToFirebase)
-
-
-// const db = getFirestore()
-
-// get single doc
-
-// const userRef = doc(db, "students", "HPiPCes9K1hMn7gQ6Qlz");
-
-// const userObj = await getDoc(userRef);
-
-// if (userObj.exists()) {
-//     console.log("Document data:", userObj.data());
-// } else {
-//     // doc.data() will be undefined in this case
-//     console.log("No such document!");
-// }
-
-// get multiple documents
-
-// const studentsCollectionRefrence = collection(db, 'students')
-// const studentsList = await getDocs(studentsCollectionRefrence)
-// console.log('studentsList==>', studentsList)
-// if (!studentsList.empty) {
-//     studentsList.forEach((doc) => {
-//         // doc.data() is never undefined for query doc snapshots
-//         console.log(doc.id, " => ", doc.data());
-//     });
-// } else {
-
-// }
-
-//add single doc
-
-//automatically id generate hojae or doc add hojae
-// const ref = collection(db, 'user')
-// const addUser = await addDoc(ref, { name: 'meelad so rha he' })
-
-// console.log('addUser=>', addUser)
-
-
-//id khud dekar document add karen
-
-// const ref = doc(db, 'user' , '123456789')
-// const addUser = await setDoc(ref, { name: 'meelad active hogya he' })
-
+    console.log(obj)
+    const uploadfoodobj = await addDoc(foodcollectionrefrence, obj)
+    console.log(uploadfoodobj)
+    form.name.value = ''
+    form.price.value = ''
+    form.desc.value = ''
+    form.image.value = ''
+})
